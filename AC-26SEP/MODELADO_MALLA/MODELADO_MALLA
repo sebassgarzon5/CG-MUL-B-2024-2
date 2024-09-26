@@ -20,8 +20,8 @@
         document.body.appendChild(renderer.domElement);
 
         // Materiales para los objetos
-        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // Cubo azul
-        const coneMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 }); // Cono verde
+        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Cubo blanco
+        const pyramidMaterial = new THREE.MeshPhongMaterial({ color: 0xffa500 }); // Pirámide naranja
 
         // Crear un cubo
         const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -39,11 +39,11 @@
         sphere.position.x = 3; // Mover la esfera a la derecha
         scene.add(sphere);
 
-        // Crear un cono
-        const coneGeometry = new THREE.ConeGeometry(0.5, 1.5, 32);
-        const cone = new THREE.Mesh(coneGeometry, coneMaterial);
-        cone.position.x = -3; // Mover el cono a la izquierda
-        scene.add(cone);
+        // Crear una pirámide
+        const pyramidGeometry = new THREE.CylinderGeometry(0, 0.5, 1, 4); // Pirámide con base cuadrada
+        const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+        pyramid.position.x = -3; // Mover la pirámide a la izquierda
+        scene.add(pyramid);
 
         // Añadir luz
         const light = new THREE.PointLight(0xffffff, 1, 100);
@@ -68,9 +68,9 @@
             sphere.rotation.x += 0.02; // Velocidad de rotación
             sphere.rotation.y += 0.02;
 
-            // Rotación del cono
-            cone.rotation.x += 0.01; // Velocidad de rotación
-            cone.rotation.y += 0.01;
+            // Rotación de la pirámide
+            pyramid.rotation.x += 0.03; // Velocidad de rotación
+            pyramid.rotation.y += 0.03;
 
             // Renderizar la escena
             renderer.render(scene, camera);
@@ -87,4 +87,3 @@
     </script>
 </body>
 </html>
-
