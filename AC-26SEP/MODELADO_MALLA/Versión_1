@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escena 3D con Three.js</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configurar la escena, cámara y renderizador
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Materiales para los objetos
+        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Cubo blanco
+        const pyramidMaterial = new THREE.MeshPhongMaterial({ color: 0xffa500 }); // Pirámide naranja
+
+        // Crear un cubo
+        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        scene.add(cube);
+
+        // Cargar una textura para la esfera
+        const textureLoader = new THREE.TextureLoader();
+        const sphereTexture = textureLoader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
+
+        // Crear una esfera
+        const sphereGeometry = new THREE.SphereGeometry(0.7, 32, 32);
+        const sphereMaterial = new THREE.MeshPhongMaterial({ map: sphereTexture }); // Esfera con textura
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.x = 3; // Mover la esfera a la derecha
+        scene.add(sphere);
+
+        // Crear una pirámide
+        const pyramidGeometry = new THREE.CylinderGeometry(0, 0.5, 1, 4); // Pirámide con base cuadrada
+        const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+        pyramid.position.x = -3; // Mover la pirámide a la izquierda
+        scene.add(pyramid);
+
+        // Añadir luz
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        // Posición inicial de la cámara
+        camera.position.z = 5;
+
+        // Función de animación
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotación del cubo
+            cube.rotation.x += 0.01; // Velocidad de rotación
+            cube.rotation.y += 0.01;
+
+            // Rotación de la esfera
+            sphere.rotation.x += 0.02; // Velocidad de rotación
+            sphere.rotation.y += 0.02;
+
+            // Rotación de la pirámide
+            pyramid.rotation.x += 0.03; // Velocidad de rotación
+            pyramid.rotation.y += 0.03;
+
+            // Renderizar la escena
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Ajuste de la ventana cuando se cambia el tamaño
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
