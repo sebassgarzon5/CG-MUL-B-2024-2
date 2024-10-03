@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubo 3D con Three.js y Orbit Controls</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // Configurar la escena, cámara y renderizador
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Añadir controles de órbita
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Crear el cubo
+        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+        const originalCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        scene.add(originalCube);
+
+        // Función para crear cubos adicionales alineados horizontalmente y centrados
+        function createCenteredCubes() {
+            const numberOfCubes = Math.floor(Math.random() * 5) + 1; // Entre 1 y 5
+            const cubes = [];
+
+            for (let i = 0; i < numberOfCubes; i++) {
+                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                const spacing = 2.5; // Distancia entre cubos
+                cube.position.x = (i - (numberOfCubes - 1) / 2) * spacing; // Espaciado
+                cube.position.y = originalCube.position.y; // Mantener la misma altura
+                cube.position.z = originalCube.position.z; // Mantener la misma profundidad
+
+                cubes.push(cube);
+                scene.add(cube);
+            }
+
+            return cubes;
+        }
+
+        // Crear cubos aleatorios alineados y centrados
+        const centeredCubes = createCenteredCubes();
+
+        // Posición inicial de la cámara
+        camera.position.z = 7;
+
+        // Función de animación
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotación del cubo original
+            originalCube.rotation.x += 0.02;
+            originalCube.rotation.y += 0.02;
+
+            // Rotación de los cubos alineados
+            centeredCubes.forEach(cube => {
+                cube.rotation.x += 0.02;
+                cube.rotation.y += 0.02;
+            });
+
+            controls.update(); // Actualizar controles
+
+            // Renderizar la escena
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Ajuste de la ventana cuando se cambia el tamaño
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
